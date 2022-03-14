@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns="http://stepinto.io/fantasygrounds"
+        targetNamespace="http://stepinto.io/fantasygrounds"
+        xmlns:meta="http://stepinto.io/fg/meta"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+        vc:minVersion="1.1"
+        meta:title="FantasyGrounds Base Schema"
+>
+
+    <xs:complexType name="TypedString">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required" fixed="string" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="LibraryLink">
+        <xs:sequence>
+            <xs:element name="class" type="xs:string" />
+            <xs:element name="recordname" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string" use="required" fixed="windowreference" />
+    </xs:complexType>
+
+    <xs:complexType name="LibraryEntry">
+        <xs:sequence>
+            <xs:element name="librarylink" type="LibraryLink" />
+            <xs:element name="name" type="TypedString" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LibraryEntryList">
+        <xs:sequence>
+            <xs:element name="id-00001" type="LibraryEntry" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="entries" type="LibraryEntryList" />
+
+</xs:schema>

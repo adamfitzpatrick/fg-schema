@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entries xmlns="http://stepinto.io/fantasygrounds">
+    <id-00001>
+        <librarylink type="windowreference">
+            <class>class</class>
+            <recordname>record</recordname>
+        </librarylink>
+        <name type="string">Foo</name>
+    </id-00001>
+</entries>
