@@ -7,11 +7,13 @@ import lombok.Getter;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -46,9 +48,9 @@ public class SchemaDocumentHelper {
      */
     public SchemaDocumentHelper(SchemaDocumentDao documentDao, ConfigurationModel configurationModel) {
         this.documentDao = documentDao;
-        builtInSchemaSourceDocuments = Arrays.stream(getSchemaUrls())
+        builtInSchemaSourceDocuments = Arrays.stream(getSchemaUris())
                 .map(this::loadRequiredSource).toArray(StreamSource[]::new);
-        externalSchemaSourceDocuments = configurationModel.getExternalSchemaUrls().stream()
+        externalSchemaSourceDocuments = configurationModel.getExternalSchemaUris().stream()
                 .map(this::loadSource).toArray(StreamSource[]::new);
         combineSourceDocuments();
     }
@@ -60,43 +62,37 @@ public class SchemaDocumentHelper {
                 builtInSchemaSourceDocuments.length, externalSchemaSourceDocuments.length);
     }
 
-    private StreamSource loadSource(URL url) {
+    private StreamSource loadSource(URI uri) {
         // TODO log warning
-        return documentDao.load(url).orElse(null);
+        return documentDao.load(uri).orElse(null);
     }
 
-    private StreamSource loadRequiredSource(URL url) {
-        return documentDao.load(url).orElseThrow(loadingException());
+    private StreamSource loadRequiredSource(URI uri) {
+        return documentDao.load(uri).orElseThrow(loadingException());
     }
 
-    private URL[] getSchemaUrls() {
-        URL schemaFolderUrl = getClass().getResource(INTERNAL_SCHEMA_FOLDER);
-        if (schemaFolderUrl != null) {
-            return getSchemaFiles(schemaFolderUrl)
-                    .map(this::generateSchemaUrls)
-                    .orElseThrow(SchemaDocumentHelper.loadingException());
-        }
-        throw SchemaDocumentHelper.loadingException().get();
-    }
-
-    private Optional<File[]> getSchemaFiles(URL schemaFolderUrl) {
+    private URI[] getSchemaUris() {
+        URI schemaFolderUri;
         try {
-            return Optional.ofNullable(new File(schemaFolderUrl.toURI()).listFiles());
+            schemaFolderUri = Objects.requireNonNull(getClass().getResource(INTERNAL_SCHEMA_FOLDER)).toURI();
         } catch (URISyntaxException e) {
-            return Optional.empty();
+            throw SchemaDocumentHelper.loadingException().get();
         }
+        return getSchemaFiles(schemaFolderUri)
+                .map(this::generateSchemaUrls)
+                .orElseThrow(SchemaDocumentHelper.loadingException());
     }
 
-    private URL[] generateSchemaUrls(File[] schemaFiles) {
-        return Arrays.stream(schemaFiles).map(this::generateSchemaUrl).toArray(URL[]::new);
+    private Optional<File[]> getSchemaFiles(URI schemaFolderUri) {
+        return Optional.ofNullable(new File(schemaFolderUri).listFiles());
     }
 
-    private URL generateSchemaUrl(File schemaFile) {
-        try {
-            return schemaFile.toURI().toURL();
-        } catch (MalformedURLException e) {
-            throw loadingException().get();
-        }
+    private URI[] generateSchemaUrls(File[] schemaFiles) {
+        return Arrays.stream(schemaFiles).map(this::generateSchemaUri).toArray(URI[]::new);
+    }
+
+    private URI generateSchemaUri(File schemaFile) {
+        return schemaFile.toURI();
     }
 
     private static Supplier<RuntimeException> loadingException() {

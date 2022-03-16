@@ -12,13 +12,8 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -46,16 +41,16 @@ public class TestHarness {
     protected static final String FIXTURES_FOLDER_PATH = "/fixtures";
     protected static final String TESTING_INSTANCE_FILENAME = "testing-instance.xml";
     @Getter
-    private final List<URL> schemaUrls;
+    private final List<URI> schemaUris;
     @Getter
-    private final List<URL> testFixtureUrls;
+    private final List<URI> testFixtureUris;
     @Getter
     private final List<StreamSource> schemaSources;
     private final ObjectMapper objectMapper;
 
     public TestHarness() {
-        schemaUrls = generateSchemaUrls();
-        testFixtureUrls = generateFixtureUrls();
+        schemaUris = generateSchemaUris();
+        testFixtureUris = generateFixtureUris();
         schemaSources = generateSchemaSources();
         objectMapper = new ObjectMapper();
     }
@@ -69,37 +64,41 @@ public class TestHarness {
         System.setProperty(EnvironmentHelper.CONFIGURATION_PROPERTY_NAME, configString);
     }
 
-    private List<URL> generateSchemaUrls() {
-        URL schemaFolder = getClass().getResource(SCHEMA_FOLDER_PATH);
-        assert schemaFolder != null;
-        return Arrays.stream(Objects.requireNonNull(new File(schemaFolder.getPath()).listFiles()))
-                     .map(this::getFileUrl).collect(Collectors.toList());
-    }
-
-    private List<URL> generateFixtureUrls() {
-        URL fixtureFolder = getClass().getResource(FIXTURES_FOLDER_PATH);
-        assert fixtureFolder != null;
-        return Arrays.stream(Objects.requireNonNull(new File(fixtureFolder.getPath()).listFiles()))
-                     .map(this::getFileUrl).collect(Collectors.toList());
-    }
-
-    private URL getFileUrl(File file) {
+    private List<URI> generateSchemaUris() {
+        URI schemaFolder;
         try {
-            return file.toURI().toURL();
-        } catch (MalformedURLException e) {
+            schemaFolder = Objects.requireNonNull(getClass().getResource(SCHEMA_FOLDER_PATH)).toURI();
+        } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+        return Arrays.stream(Objects.requireNonNull(new File(schemaFolder.getPath()).listFiles()))
+                     .map(this::getFileUri).collect(Collectors.toList());
+    }
+
+    private List<URI> generateFixtureUris() {
+        URI fixtureFolder;
+        try {
+            fixtureFolder = Objects.requireNonNull(getClass().getResource(FIXTURES_FOLDER_PATH)).toURI();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return Arrays.stream(Objects.requireNonNull(new File(fixtureFolder.getPath()).listFiles()))
+                     .map(this::getFileUri).collect(Collectors.toList());
+    }
+
+    private URI getFileUri(File file) {
+        return file.toURI();
     }
 
     private List<StreamSource> generateSchemaSources() {
-        new StreamSource(schemaUrls.get(0).getPath());
-        return schemaUrls.stream().map(this::generateStreamSource).collect(Collectors.toList());
+        new StreamSource(schemaUris.get(0).getPath());
+        return schemaUris.stream().map(this::generateStreamSource).collect(Collectors.toList());
     }
 
-    private StreamSource generateStreamSource(URL url) {
+    private StreamSource generateStreamSource(URI uri) {
         try {
-            FileInputStream is = new FileInputStream(url.getPath());
-            return new StreamSource(is, url.getPath());
+            FileInputStream is = new FileInputStream(uri.getPath());
+            return new StreamSource(is, uri.getPath());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,16 +23,16 @@ public class SchemaDocumentDaoTest {
     }
 
     @Test
-    public void testLoad() {
-        URL url = getClass().getResource("/fixtures/testing-instance.xml");
-        assertNotNull(url);
-        assertTrue(sut.load(url).isPresent());
+    public void testLoad() throws URISyntaxException {
+        URI uri = getClass().getResource("/fixtures/testing-instance.xml").toURI();
+        assertNotNull(uri);
+        assertTrue(sut.load(uri).isPresent());
     }
 
     @Test
-    public void testLoadFileNotFound() throws MalformedURLException {
-        URL url = new URL("file:/bad");
-        assertNotNull(url);
-        assertTrue(sut.load(url).isEmpty());
+    public void testLoadFileNotFound() throws URISyntaxException {
+        URI uri = new URI("file:/bad");
+        assertNotNull(uri);
+        assertTrue(sut.load(uri).isEmpty());
     }
 }

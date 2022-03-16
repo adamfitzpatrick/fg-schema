@@ -18,7 +18,7 @@ class ResourceResolverTest extends TestHarness {
 
     @Test
     public void testResolveResource() throws URISyntaxException {
-        URL baseURL = this.getTestFixtureUrls().get(0);
+        URI baseURL = this.getTestFixtureUris().get(0);
         LSInput input = sut.resolveResource("not used", "namespaceURI", "not used", TestHarness.TESTING_INSTANCE_FILENAME, baseURL.toString());
         assertEquals(TestHarness.TESTING_INSTANCE_FILENAME, input.getSystemId());
         assertEquals(baseURL.toString(), input.getBaseURI());

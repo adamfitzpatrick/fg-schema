@@ -1,10 +1,8 @@
 package io.stepinto.fgSchema;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.stepinto.fgSchema.utils.ConfigurationModel;
 import io.stepinto.fgSchema.document.SchemaDocumentHelper;
+import io.stepinto.fgSchema.utils.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -12,9 +10,7 @@ import org.xml.sax.SAXException;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Objects;
 
 @Tag("integration")
 public class FGSchemaIT {
@@ -27,7 +23,7 @@ public class FGSchemaIT {
     public void setup() {
         instance = getClass().getResourceAsStream(INSTANCE_FILE);
         ConfigurationModel configurationModel = new ConfigurationModel()
-                .setExternalSchemaUrls(Collections.emptyList());
+                .setExternalSchemaUris(Collections.emptyList());
         helper = new SchemaDocumentHelper(configurationModel);
     }
 

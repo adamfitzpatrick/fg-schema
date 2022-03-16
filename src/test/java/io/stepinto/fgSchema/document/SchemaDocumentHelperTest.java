@@ -10,6 +10,8 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 
 import javax.xml.transform.stream.StreamSource;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Optional;
@@ -26,24 +28,24 @@ public class SchemaDocumentHelperTest extends TestHarness {
     private ConfigurationModel configurationModel;
 
     @BeforeEach
-    public void setup() {
-        configurationModel = new ConfigurationModel().setExternalSchemaUrls(Collections.singletonList(getClass().getResource("/fixtures/testing-instance.xml")));
-        when(documentDao.load(any(URL.class))).thenReturn(Optional.of(new StreamSource()));
+    public void setup() throws URISyntaxException {
+        configurationModel = new ConfigurationModel().setExternalSchemaUris(Collections.singletonList(getClass().getResource("/fixtures/testing-instance.xml").toURI()));
+        when(documentDao.load(any(URI.class))).thenReturn(Optional.of(new StreamSource()));
         sut = new SchemaDocumentHelper(documentDao, configurationModel);
     }
 
     @Test
     public void testInstantiation() {
-        int schemaFileCount = this.getSchemaUrls().size() + this.getTestFixtureUrls().size();
+        int schemaFileCount = this.getSchemaUris().size() + this.getTestFixtureUris().size();
         assertNotNull(sut.getBuiltInSchemaSourceDocuments());
         assertNotNull(sut.getExternalSchemaSourceDocuments());
 
-        verify(documentDao, times(schemaFileCount)).load(any(URL.class));
+        verify(documentDao, times(schemaFileCount)).load(any(URI.class));
     }
 
     @Test
     public void testInstantiationBuiltInLoadingFailure() {
-        when(documentDao.load(argThat(new UrlMatcher(".*FantasyGrounds.*")))).thenReturn(Optional.empty());
+        when(documentDao.load(argThat(new UriMatcher(".*FantasyGrounds.*")))).thenReturn(Optional.empty());
         assertThrows(RuntimeException.class, () -> {
             new SchemaDocumentHelper(documentDao, configurationModel);
         });
@@ -51,7 +53,7 @@ public class SchemaDocumentHelperTest extends TestHarness {
 
     @Test
     public void testInstantiationExternalLoadingFailure() {
-        when(documentDao.load(argThat(new UrlMatcher(".*testing-instance.*")))).thenReturn(Optional.empty());
+        when(documentDao.load(argThat(new UriMatcher(".*testing-instance.*")))).thenReturn(Optional.empty());
         assertDoesNotThrow(() -> new SchemaDocumentHelper(documentDao, configurationModel));
     }
 
@@ -61,17 +63,17 @@ public class SchemaDocumentHelperTest extends TestHarness {
         assertEquals(totalDocs, sut.getSchemaSourceDocuments().length);
     }
 
-    private static class UrlMatcher implements ArgumentMatcher<URL> {
+    private static class UriMatcher implements ArgumentMatcher<URI> {
 
-        private final String referenceUrl;
+        private final String referenceUri;
 
-        public UrlMatcher(String referenceUrl) {
-            this.referenceUrl = referenceUrl;
+        public UriMatcher(String referenceUri) {
+            this.referenceUri = referenceUri;
         }
 
         @Override
-        public boolean matches(URL argument) {
-            return argument.getPath().matches(referenceUrl);
+        public boolean matches(URI argument) {
+            return argument.getPath().matches(referenceUri);
         }
     }
 }

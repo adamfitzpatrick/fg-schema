@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -18,9 +20,9 @@ public class EnvironmentHelperTest extends TestHarness {
     private EnvironmentHelper sut;
 
     @BeforeEach
-    public void setup() throws MalformedURLException, JsonProcessingException {
+    public void setup() throws JsonProcessingException, URISyntaxException {
         configurationModel = new ConfigurationModel()
-                .setExternalSchemaUrls(Arrays.asList(new URL("file:url1"), new URL("file:url2")));
+                .setExternalSchemaUris(Arrays.asList(new URI("file:url1"), new URI("file:url2")));
         this.setConfiguration(configurationModel);
         sut = EnvironmentHelper.get();
     }
