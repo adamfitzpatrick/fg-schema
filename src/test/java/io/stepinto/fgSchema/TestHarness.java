@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.stepinto.fgSchema.utils.ConfigurationModel;
 import io.stepinto.fgSchema.utils.EnvironmentHelper;
+import lombok.Getter;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -12,7 +13,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -36,13 +42,20 @@ import java.util.stream.Collectors;
 @ExtendWith(MockitoExtension.class)
 public class TestHarness {
 
-    private static final String SCHEMA_FOLDER_PATH = "/schema";
+    protected static final String SCHEMA_FOLDER_PATH = "/schema";
+    protected static final String FIXTURES_FOLDER_PATH = "/fixtures";
+    protected static final String TESTING_INSTANCE_FILENAME = "testing-instance.xml";
+    @Getter
     private final List<URL> schemaUrls;
+    @Getter
+    private final List<URL> testFixtureUrls;
+    @Getter
     private final List<StreamSource> schemaSources;
     private final ObjectMapper objectMapper;
 
     public TestHarness() {
         schemaUrls = generateSchemaUrls();
+        testFixtureUrls = generateFixtureUrls();
         schemaSources = generateSchemaSources();
         objectMapper = new ObjectMapper();
     }
@@ -60,6 +73,13 @@ public class TestHarness {
         URL schemaFolder = getClass().getResource(SCHEMA_FOLDER_PATH);
         assert schemaFolder != null;
         return Arrays.stream(Objects.requireNonNull(new File(schemaFolder.getPath()).listFiles()))
+                     .map(this::getFileUrl).collect(Collectors.toList());
+    }
+
+    private List<URL> generateFixtureUrls() {
+        URL fixtureFolder = getClass().getResource(FIXTURES_FOLDER_PATH);
+        assert fixtureFolder != null;
+        return Arrays.stream(Objects.requireNonNull(new File(fixtureFolder.getPath()).listFiles()))
                      .map(this::getFileUrl).collect(Collectors.toList());
     }
 

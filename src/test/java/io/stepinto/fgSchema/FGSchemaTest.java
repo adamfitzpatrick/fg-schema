@@ -3,6 +3,7 @@ package io.stepinto.fgSchema;
 import io.stepinto.fgSchema.document.ResourceResolver;
 import io.stepinto.fgSchema.document.SchemaDocumentHelper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
@@ -18,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Tag("unit")
 public class FGSchemaTest extends TestHarness {
 
     @Mock private SchemaDocumentHelper schemaDocumentHelper;

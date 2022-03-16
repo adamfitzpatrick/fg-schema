@@ -27,6 +27,6 @@ public class ResourceResolver implements LSResourceResolver {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Unable to load data for namespace reference");
         }
-        return new ResourceInput().systemId(systemId).byteStream(byteStream);
+        return new ResourceInput().systemId(systemId).byteStream(byteStream).baseURI(baseURI);
     }
 }

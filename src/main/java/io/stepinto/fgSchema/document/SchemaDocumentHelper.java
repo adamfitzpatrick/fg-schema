@@ -9,6 +9,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -69,7 +71,7 @@ public class SchemaDocumentHelper {
 
     private URL[] getSchemaUrls() {
         URL schemaFolderUrl = getClass().getResource(INTERNAL_SCHEMA_FOLDER);
-        if (null != schemaFolderUrl) {
+        if (schemaFolderUrl != null) {
             return getSchemaFiles(schemaFolderUrl)
                     .map(this::generateSchemaUrls)
                     .orElseThrow(SchemaDocumentHelper.loadingException());

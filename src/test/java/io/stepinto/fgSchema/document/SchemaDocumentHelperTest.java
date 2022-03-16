@@ -1,13 +1,13 @@
 package io.stepinto.fgSchema.document;
 
+import io.stepinto.fgSchema.TestHarness;
 import io.stepinto.fgSchema.dao.SchemaDocumentDao;
 import io.stepinto.fgSchema.utils.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.xml.transform.stream.StreamSource;
 import java.net.URL;
@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class SchemaDocumentHelperTest {
+@Tag("unit")
+public class SchemaDocumentHelperTest extends TestHarness {
 
     @Mock private SchemaDocumentDao documentDao;
     private SchemaDocumentHelper sut;
@@ -27,17 +27,18 @@ public class SchemaDocumentHelperTest {
 
     @BeforeEach
     public void setup() {
-        configurationModel = new ConfigurationModel().setExternalSchemaUrls(Collections.singletonList(getClass().getResource("/testing-instance.xml")));
+        configurationModel = new ConfigurationModel().setExternalSchemaUrls(Collections.singletonList(getClass().getResource("/fixtures/testing-instance.xml")));
         when(documentDao.load(any(URL.class))).thenReturn(Optional.of(new StreamSource()));
         sut = new SchemaDocumentHelper(documentDao, configurationModel);
     }
 
     @Test
     public void testInstantiation() {
+        int schemaFileCount = this.getSchemaUrls().size() + this.getTestFixtureUrls().size();
         assertNotNull(sut.getBuiltInSchemaSourceDocuments());
         assertNotNull(sut.getExternalSchemaSourceDocuments());
 
-        verify(documentDao, times(2)).load(any(URL.class));
+        verify(documentDao, times(schemaFileCount)).load(any(URL.class));
     }
 
     @Test

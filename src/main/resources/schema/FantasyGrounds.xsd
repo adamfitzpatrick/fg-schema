@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema
         xmlns="http://stepinto.io/fantasygrounds"
+        elementFormDefault="qualified"
         targetNamespace="http://stepinto.io/fantasygrounds"
         xmlns:meta="http://stepinto.io/fg/meta"
         xmlns:xs="http://www.w3.org/2001/XMLSchema"

@@ -1,7 +1,7 @@
 package io.stepinto.fgSchema.dao;
 
-import io.stepinto.fgSchema.dao.SchemaDocumentDao;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
@@ -10,6 +10,7 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Tag("unit")
 public class SchemaDocumentDaoTest {
 
     private SchemaDocumentDao sut;
@@ -21,7 +22,7 @@ public class SchemaDocumentDaoTest {
 
     @Test
     public void testLoad() {
-        URL url = getClass().getResource("/testing-instance.xml");
+        URL url = getClass().getResource("/fixtures/testing-instance.xml");
         assertNotNull(url);
         assertTrue(sut.load(url).isPresent());
     }
