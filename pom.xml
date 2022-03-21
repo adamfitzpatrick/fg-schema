@@ -15,6 +15,26 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.stepinto.xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.stepinto.xerces</groupId>
+            <artifactId>xpath2-processor</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.stepinto.xerces</groupId>
+            <artifactId>resolver</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.stepinto.xerces</groupId>
+            <artifactId>serializer</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <version>5.8.2</version>
