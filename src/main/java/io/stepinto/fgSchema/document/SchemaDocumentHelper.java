@@ -1,21 +1,19 @@
 package io.stepinto.fgSchema.document;
 
 import io.stepinto.fgSchema.dao.SchemaDocumentDao;
-import io.stepinto.fgSchema.utils.ConfigurationModel;
+import io.stepinto.fgSchema.dom.ConfigurationModel;
 import lombok.Getter;
 
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * This class loads XML schema documents from application resources as
@@ -23,10 +21,12 @@ import java.util.function.Supplier;
  */
 public class SchemaDocumentHelper {
     private static final String INTERNAL_SCHEMA_FOLDER = "/schema";
+    private static final String JAR_URI_SCHEME = "jar";
     private static final String LOADING_ERROR_MESSAGE = "Unable to access one or more core schema files";
     private static final String LOADING_WARNING_MESSAGE = "Unable to access one or more external schema files";
 
     private final SchemaDocumentDao documentDao;
+    private final boolean isNotJar;
 
     @Getter
     protected final StreamSource[] builtInSchemaSourceDocuments;
@@ -48,11 +48,39 @@ public class SchemaDocumentHelper {
      */
     public SchemaDocumentHelper(SchemaDocumentDao documentDao, ConfigurationModel configurationModel) {
         this.documentDao = documentDao;
-        builtInSchemaSourceDocuments = Arrays.stream(getSchemaUris())
+        isNotJar = SchemaDocumentDao.determineIsNotJar();
+        builtInSchemaSourceDocuments = getInternalSchemaPaths().stream()
                 .map(this::loadRequiredSource).toArray(StreamSource[]::new);
-        externalSchemaSourceDocuments = configurationModel.getExternalSchemaUris().stream()
+        externalSchemaSourceDocuments = configurationModel.getExternalSchemaPaths().stream()
                 .map(this::loadSource).toArray(StreamSource[]::new);
         combineSourceDocuments();
+    }
+
+    private List<Path> getInternalSchemaPaths() {
+        URI schemaFolderUri = getSchemaUri();
+        try {
+            Path schemaFolderPath;
+            if (isNotJar) {
+                schemaFolderPath = Paths.get(schemaFolderUri);
+            } else {
+                FileSystem fileSystem = FileSystems.newFileSystem(schemaFolderUri, Collections.emptyMap());
+                System.out.println(fileSystem.toString());
+                schemaFolderPath = fileSystem.getPath(INTERNAL_SCHEMA_FOLDER);
+            }
+            return Files.walk(schemaFolderPath, 1)
+                    .filter(path -> !Files.isDirectory(path))
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw loadingException(e.getMessage());
+        }
+    }
+
+    private URI getSchemaUri() {
+        try {
+            return Objects.requireNonNull(getClass().getResource(INTERNAL_SCHEMA_FOLDER)).toURI();
+        } catch (URISyntaxException e) {
+            throw loadingException(e.getMessage());
+        }
     }
 
     private void combineSourceDocuments() {
@@ -62,40 +90,25 @@ public class SchemaDocumentHelper {
                 builtInSchemaSourceDocuments.length, externalSchemaSourceDocuments.length);
     }
 
-    private StreamSource loadSource(URI uri) {
+    private StreamSource loadSource(String path) {
+        return loadSource(Path.of(path));
+    }
+
+    private StreamSource loadSource(Path path) {
         // TODO log warning
-        return documentDao.load(uri).orElse(null);
+        return documentDao.load(path.toString(), isNotJar).orElse(null);
     }
 
-    private StreamSource loadRequiredSource(URI uri) {
-        return documentDao.load(uri).orElseThrow(loadingException());
+    private StreamSource loadRequiredSource(Path path) {
+        return documentDao.load(path.toString(), isNotJar).orElseThrow(this::loadingException);
     }
 
-    private URI[] getSchemaUris() {
-        URI schemaFolderUri;
-        try {
-            schemaFolderUri = Objects.requireNonNull(getClass().getResource(INTERNAL_SCHEMA_FOLDER)).toURI();
-        } catch (URISyntaxException e) {
-            throw SchemaDocumentHelper.loadingException().get();
-        }
-        return getSchemaFiles(schemaFolderUri)
-                .map(this::generateSchemaUrls)
-                .orElseThrow(SchemaDocumentHelper.loadingException());
+    private RuntimeException loadingException() {
+        return loadingException("");
     }
 
-    private Optional<File[]> getSchemaFiles(URI schemaFolderUri) {
-        return Optional.ofNullable(new File(schemaFolderUri).listFiles());
-    }
-
-    private URI[] generateSchemaUrls(File[] schemaFiles) {
-        return Arrays.stream(schemaFiles).map(this::generateSchemaUri).toArray(URI[]::new);
-    }
-
-    private URI generateSchemaUri(File schemaFile) {
-        return schemaFile.toURI();
-    }
-
-    private static Supplier<RuntimeException> loadingException() {
-        return () -> new RuntimeException(LOADING_ERROR_MESSAGE);
+    private RuntimeException loadingException(String message) {
+        message = message.isEmpty() ? message : ": " + message;
+        return new RuntimeException(LOADING_ERROR_MESSAGE + message);
     }
 }

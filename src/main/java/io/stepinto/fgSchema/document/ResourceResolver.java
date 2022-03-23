@@ -3,6 +3,7 @@ package io.stepinto.fgSchema.document;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URI;
@@ -14,12 +15,7 @@ public class ResourceResolver implements LSResourceResolver {
 
     @Override
     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-        Path basePath;
-        try {
-            basePath = Paths.get(new URI(baseURI)).getParent();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Unable to resolve namespace reference");
-        }
+        Path basePath = new File(baseURI).toPath();
         Path namespacePath = Paths.get("./" + systemId);
         FileInputStream byteStream;
         try {

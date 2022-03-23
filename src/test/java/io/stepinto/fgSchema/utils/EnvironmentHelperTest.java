@@ -2,14 +2,12 @@ package io.stepinto.fgSchema.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.stepinto.fgSchema.TestHarness;
+import io.stepinto.fgSchema.dom.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +20,7 @@ public class EnvironmentHelperTest extends TestHarness {
     @BeforeEach
     public void setup() throws JsonProcessingException, URISyntaxException {
         configurationModel = new ConfigurationModel()
-                .setExternalSchemaUris(Arrays.asList(new URI("file:url1"), new URI("file:url2")));
+                .setExternalSchemaPaths(Arrays.asList("file1", "file2"));
         this.setConfiguration(configurationModel);
         sut = EnvironmentHelper.get();
     }

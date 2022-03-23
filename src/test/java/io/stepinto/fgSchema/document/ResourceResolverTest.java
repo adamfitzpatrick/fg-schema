@@ -8,6 +8,7 @@ import org.w3c.dom.ls.LSInput;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,10 +19,10 @@ class ResourceResolverTest extends TestHarness {
 
     @Test
     public void testResolveResource() throws URISyntaxException {
-        URI baseURL = this.getTestFixtureUris().get(0);
-        LSInput input = sut.resolveResource("not used", "namespaceURI", "not used", TestHarness.TESTING_INSTANCE_FILENAME, baseURL.toString());
+        Path basePath = this.getFixtureFolderPath();
+        LSInput input = sut.resolveResource("not used", "namespaceURI", "not used", TestHarness.TESTING_INSTANCE_FILENAME, basePath.toString());
         assertEquals(TestHarness.TESTING_INSTANCE_FILENAME, input.getSystemId());
-        assertEquals(baseURL.toString(), input.getBaseURI());
+        assertEquals(basePath.toString(), input.getBaseURI());
         assertNotNull(input.getByteStream());
     }
 }

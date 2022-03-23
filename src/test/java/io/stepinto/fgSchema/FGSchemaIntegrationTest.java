@@ -1,7 +1,7 @@
 package io.stepinto.fgSchema;
 
 import io.stepinto.fgSchema.document.SchemaDocumentHelper;
-import io.stepinto.fgSchema.utils.ConfigurationModel;
+import io.stepinto.fgSchema.dom.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.Collections;
 
 @Tag("integration")
-public class FGSchemaIT {
+public class FGSchemaIntegrationTest {
     private static final String INSTANCE_FILE = "/fixtures/testing-instance.xml";
     private InputStream instance;
     private SchemaDocumentHelper helper;
@@ -23,7 +23,7 @@ public class FGSchemaIT {
     public void setup() {
         instance = getClass().getResourceAsStream(INSTANCE_FILE);
         ConfigurationModel configurationModel = new ConfigurationModel()
-                .setExternalSchemaUris(Collections.emptyList());
+                .setExternalSchemaPaths(Collections.emptyList());
         helper = new SchemaDocumentHelper(configurationModel);
     }
 

@@ -1,16 +1,15 @@
-package io.stepinto.fgSchema.utils;
+package io.stepinto.fgSchema.dom;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.net.URI;
 import java.util.List;
 
 public class ConfigurationModel {
 
     @Setter
     @Getter
-    private List<URI> externalSchemaUris;
+    private List<String> externalSchemaPaths;
 
     @Override
     public boolean equals(Object other) {
@@ -18,6 +17,6 @@ public class ConfigurationModel {
             return false;
         }
         ConfigurationModel otherConfig = (ConfigurationModel) other;
-        return otherConfig.externalSchemaUris.equals(this.externalSchemaUris);
+        return otherConfig.externalSchemaPaths.equals(this.externalSchemaPaths);
     }
 }

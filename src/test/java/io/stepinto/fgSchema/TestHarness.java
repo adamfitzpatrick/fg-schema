@@ -2,19 +2,16 @@ package io.stepinto.fgSchema;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.stepinto.fgSchema.utils.ConfigurationModel;
+import io.stepinto.fgSchema.dom.ConfigurationModel;
 import io.stepinto.fgSchema.utils.EnvironmentHelper;
 import lombok.Getter;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.nio.file.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -41,16 +38,16 @@ public class TestHarness {
     protected static final String FIXTURES_FOLDER_PATH = "/fixtures";
     protected static final String TESTING_INSTANCE_FILENAME = "testing-instance.xml";
     @Getter
-    private final List<URI> schemaUris;
+    private final List<Path> schemaPaths;
     @Getter
-    private final List<URI> testFixtureUris;
+    private final List<Path> testFixturePaths;
     @Getter
     private final List<StreamSource> schemaSources;
     private final ObjectMapper objectMapper;
 
     public TestHarness() {
-        schemaUris = generateSchemaUris();
-        testFixtureUris = generateFixtureUris();
+        schemaPaths = generatePaths(SCHEMA_FOLDER_PATH);
+        testFixturePaths = generatePaths(FIXTURES_FOLDER_PATH);
         schemaSources = generateSchemaSources();
         objectMapper = new ObjectMapper();
     }
@@ -64,41 +61,32 @@ public class TestHarness {
         System.setProperty(EnvironmentHelper.CONFIGURATION_PROPERTY_NAME, configString);
     }
 
-    private List<URI> generateSchemaUris() {
-        URI schemaFolder;
-        try {
-            schemaFolder = Objects.requireNonNull(getClass().getResource(SCHEMA_FOLDER_PATH)).toURI();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        return Arrays.stream(Objects.requireNonNull(new File(schemaFolder.getPath()).listFiles()))
-                     .map(this::getFileUri).collect(Collectors.toList());
+    public Path getFixtureFolderPath() {
+        return testFixturePaths.get(0).getParent();
     }
 
-    private List<URI> generateFixtureUris() {
-        URI fixtureFolder;
-        try {
-            fixtureFolder = Objects.requireNonNull(getClass().getResource(FIXTURES_FOLDER_PATH)).toURI();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        return Arrays.stream(Objects.requireNonNull(new File(fixtureFolder.getPath()).listFiles()))
-                     .map(this::getFileUri).collect(Collectors.toList());
+    public Path getSchemaFolderPath() {
+        return schemaPaths.get(0).getParent();
     }
 
-    private URI getFileUri(File file) {
-        return file.toURI();
+    private List<Path> generatePaths(String folderUri) {
+        try {
+            Path schemaFolderPath = Paths.get(Objects.requireNonNull(getClass().getResource(folderUri)).toURI());
+            return Files.walk(schemaFolderPath, 1)
+                    .filter(path -> !path.toFile().isDirectory())
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     private List<StreamSource> generateSchemaSources() {
-        new StreamSource(schemaUris.get(0).getPath());
-        return schemaUris.stream().map(this::generateStreamSource).collect(Collectors.toList());
+        return schemaPaths.stream().map(this::generateStreamSource).collect(Collectors.toList());
     }
 
-    private StreamSource generateStreamSource(URI uri) {
+    private StreamSource generateStreamSource(Path path) {
         try {
-            FileInputStream is = new FileInputStream(uri.getPath());
-            return new StreamSource(is, uri.getPath());
+            return new StreamSource(new FileInputStream(path.toFile()), path.toString());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

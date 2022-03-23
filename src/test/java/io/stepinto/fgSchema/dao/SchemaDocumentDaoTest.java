@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,16 +25,20 @@ public class SchemaDocumentDaoTest {
     }
 
     @Test
-    public void testLoad() throws URISyntaxException {
-        URI uri = getClass().getResource("/fixtures/testing-instance.xml").toURI();
-        assertNotNull(uri);
-        assertTrue(sut.load(uri).isPresent());
+    public void testLoadFromJar() {
+        String path = "/fixtures/testing-instance.xml";
+        assertTrue(sut.load(path).isPresent());
     }
 
     @Test
-    public void testLoadFileNotFound() throws URISyntaxException {
-        URI uri = new URI("file:/bad");
-        assertNotNull(uri);
-        assertTrue(sut.load(uri).isEmpty());
+    public void testLoadFromFS() throws URISyntaxException {
+        String path = getClass().getResource("/fixtures/testing-instance.xml").toURI().getPath();
+        assertTrue(sut.load(path, true).isPresent());
+    }
+
+    @Test
+    public void testLoadFileNotFound() {
+        String path = "/bad";
+        assertTrue(sut.load(path).isEmpty());
     }
 }
