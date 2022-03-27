@@ -1,7 +1,7 @@
 package io.stepinto.fgSchema;
 
 import io.stepinto.fgSchema.document.SchemaDocumentHelper;
-import io.stepinto.fgSchema.dom.ConfigurationModel;
+import io.stepinto.fgSchema.utils.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

@@ -2,17 +2,14 @@ package io.stepinto.fgSchema.document;
 
 import io.stepinto.fgSchema.TestHarness;
 import io.stepinto.fgSchema.dao.SchemaDocumentDao;
-import io.stepinto.fgSchema.dom.ConfigurationModel;
-import org.junit.Ignore;
+import io.stepinto.fgSchema.utils.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 
 import javax.xml.transform.stream.StreamSource;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -31,7 +28,7 @@ public class SchemaDocumentHelperTest extends TestHarness {
     public void setup() throws URISyntaxException {
         configurationModel = new ConfigurationModel().setExternalSchemaPaths(Collections.singletonList("path"));
         Optional<StreamSource> doc = Optional.of(new StreamSource());
-        when(documentDao.load("C:\\Users\\adam\\IdeaProjects\\fg-schema\\target\\classes\\schema\\FantasyGrounds.xsd", true)).thenReturn(doc);
+        when(documentDao.load(anyString(), eq(true))).thenReturn(doc);
         sut = new SchemaDocumentHelper(documentDao, configurationModel);
     }
 
@@ -42,10 +39,10 @@ public class SchemaDocumentHelperTest extends TestHarness {
         assertNotNull(sut.getExternalSchemaSourceDocuments());
         assertEquals(schemaFileCount, sut.getSchemaSourceDocuments().length);
     }
-/*
+
     @Test
     public void testInstantiationBuiltInLoadingFailure() {
-        when(documentDao.load(contains("FantasyGrounds"), eq(false))).thenReturn(Optional.empty());
+        when(documentDao.load(contains("FantasyGrounds"), eq(true))).thenReturn(Optional.empty());
         assertThrows(RuntimeException.class, () -> {
             new SchemaDocumentHelper(documentDao, configurationModel);
         });
@@ -53,7 +50,7 @@ public class SchemaDocumentHelperTest extends TestHarness {
 
     @Test
     public void testInstantiationExternalLoadingFailure() {
-        when(documentDao.load(contains("path"), eq(false))).thenReturn(Optional.empty());
+        when(documentDao.load(contains("path"), eq(true))).thenReturn(Optional.empty());
         assertDoesNotThrow(() -> new SchemaDocumentHelper(documentDao, configurationModel));
     }
 
@@ -61,5 +58,5 @@ public class SchemaDocumentHelperTest extends TestHarness {
     public void testGetSchemaSourceDocuments() {
         int totalDocs = sut.builtInSchemaSourceDocuments.length + sut.externalSchemaSourceDocuments.length;
         assertEquals(totalDocs, sut.getSchemaSourceDocuments().length);
-    }*/
+    }
 }

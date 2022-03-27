@@ -2,7 +2,7 @@ package io.stepinto.fgSchema;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.stepinto.fgSchema.dom.ConfigurationModel;
+import io.stepinto.fgSchema.utils.ConfigurationModel;
 import io.stepinto.fgSchema.utils.EnvironmentHelper;
 import lombok.Getter;
 import org.junit.jupiter.api.extension.ExtendWith;

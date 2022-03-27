@@ -1,7 +1,7 @@
 package io.stepinto.fgSchema.document;
 
 import io.stepinto.fgSchema.dao.SchemaDocumentDao;
-import io.stepinto.fgSchema.dom.ConfigurationModel;
+import io.stepinto.fgSchema.utils.ConfigurationModel;
 import lombok.Getter;
 
 import javax.xml.transform.stream.StreamSource;

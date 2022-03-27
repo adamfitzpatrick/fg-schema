@@ -11,28 +11,29 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <xerces2.version>1.0</xerces2.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>io.stepinto.xerces</groupId>
+            <groupId>io.stepinto.xerces2</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>1.0</version>
+            <version>${xerces2.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.stepinto.xerces</groupId>
-            <artifactId>xpath2-processor</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.stepinto.xerces</groupId>
+            <groupId>io.stepinto.xerces2</groupId>
             <artifactId>resolver</artifactId>
-            <version>1.0</version>
+            <version>${xerces2.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.stepinto.xerces</groupId>
+            <groupId>io.stepinto.xerces2</groupId>
             <artifactId>serializer</artifactId>
-            <version>1.0</version>
+            <version>${xerces2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.stepinto.xerces2</groupId>
+            <artifactId>xpath2-processor</artifactId>
+            <version>${xerces2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.vintage</groupId>

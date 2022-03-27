@@ -2,7 +2,6 @@ package io.stepinto.fgSchema.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.stepinto.fgSchema.TestHarness;
-import io.stepinto.fgSchema.dom.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

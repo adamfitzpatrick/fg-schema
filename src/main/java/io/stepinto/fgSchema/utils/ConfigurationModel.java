@@ -1,4 +1,4 @@
-package io.stepinto.fgSchema.dom;
+package io.stepinto.fgSchema.utils;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,6 @@
 package io.stepinto.fgSchema.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.stepinto.fgSchema.dom.ConfigurationModel;
 
 import java.io.IOException;
 
