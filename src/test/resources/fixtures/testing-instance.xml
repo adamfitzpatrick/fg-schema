@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entries xmlns="http://stepinto.io/fantasygrounds">
-    <id-00001>
-        <librarylink type="windowreference">
-            <class>class</class>
-            <recordname>record</recordname>
-        </librarylink>
-        <name type="string">Foo</name>
-    </id-00001>
-</entries>
+<root
+        xmlns="http://stepinto.io/fantasygrounds"
+        xmlns:dd5="http://stepinto.io/FG-DD5eCore"
+>
+    <reference static="true">
+        <dd5:id-00001>
+            <librarylink type="windowreference">
+                <class></class>
+                <recordname></recordname>
+            </librarylink>
+            <name type="formattedtext"></name>
+        </dd5:id-00001>
+    </reference>
+    <library>
+        <dd5:libndd5esrddata>
+            <name type="string">Stuff</name>
+            <categoryname type="string">Things</categoryname>
+            <entries>
+                <typeAssertionTester>
+                    <content1>asdf</content1>
+                    <content2>asdf</content2>
+                </typeAssertionTester>
+            </entries>
+        </dd5:libndd5esrddata>
+    </library>
+</root>

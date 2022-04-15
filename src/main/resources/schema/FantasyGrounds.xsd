@@ -9,21 +9,84 @@
         vc:minVersion="1.1"
         meta:title="FantasyGrounds Base Schema"
 >
+    <xs:import schemaLocation="DD5eCore.xsd" namespace="http://stepinto.io/FG-DD5eCore"/>
+
+    <!--
+    Extension of xs:string which requires an type attribute that accepts
+    values in ["string", "formattedtext"]:
+
+      <elementName type="...">string content</elementName>
+    -->
 
     <xs:complexType name="TypedString">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="type" type="xs:string" use="required" fixed="string" />
+                <xs:attribute name="type" type="xs:string" use="required" />
+                <xs:assert test="some $type in ('string', 'formattedtext')
+                                 satisfies @type = $type" />
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="NameText">
+        <xs:sequence>
+            <xs:element name="name" type="TypedString" />
+            <xs:element name="text" type="TypedString" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LinkDescription">
+        <xs:sequence>
+            <xs:element name="field" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ReferencesList">
+        <xs:sequence>
+            <xs:any />
+        </xs:sequence>
+        <xs:attribute type="xs:boolean" name="static" use="required" />
     </xs:complexType>
 
     <xs:complexType name="LibraryLink">
         <xs:sequence>
             <xs:element name="class" type="xs:string" />
             <xs:element name="recordname" type="xs:string" />
+            <xs:element name="description" type="LinkDescription" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="type" type="xs:string" use="required" fixed="windowreference" />
+    </xs:complexType>
+
+    <xs:complexType name="ListIndexItem">
+        <xs:sequence>
+            <xs:element name="link" type="LibraryLink" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ListGroup">
+        <xs:sequence>
+            <xs:element name="description" type="TypedString" />
+            <xs:element name="index">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any minOccurs="1" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ListType">
+        <xs:sequence>
+            <xs:element name="description" type="TypedString" />
+            <xs:element name="groups">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any minOccurs="1" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="LibraryEntry">
@@ -35,10 +98,57 @@
 
     <xs:complexType name="LibraryEntryList">
         <xs:sequence>
-            <xs:element name="id-00001" type="LibraryEntry" />
+            <xs:any maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="entries" type="LibraryEntryList" />
+    <xs:complexType name="Library">
+        <xs:sequence>
+            <xs:element type="TypedString" name="name" />
+            <xs:element type="TypedString" name="categoryname" />
+            <xs:element type="LibraryEntryList" name="entries" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LibrariesList">
+        <xs:sequence>
+            <xs:any />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RootElement">
+        <xs:sequence>
+            <xs:element name="reference" type="ReferencesList" />
+            <xs:element name="library" type="LibrariesList" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="root" type="RootElement" />
+
+    <xs:simpleType name="SizeType">
+        <xs:restriction base="xs:integer">
+            <xs:assertion test="$value != 0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="ProductType">
+        <xs:sequence>
+            <xs:element name="number" type="xs:integer"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="size" type="SizeType"/>
+        </xs:sequence>
+        <xs:attribute name="dept" type="xs:string"/>
+        <xs:assert test="(@dept = 'ACC' and number > 500) or
+                   (number &lt; 300)"/>
+    </xs:complexType>
+    <xs:complexType name="TypeAssertionTester">
+        <xs:sequence>
+            <xs:any maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:assert test="every $entry in child::* satisfies $entry instance of LibraryEntry" />
+    </xs:complexType>
+
+    <xs:element name="typeAssertionTester" type="TypeAssertionTester" />
+    <xs:element name="content1" type="xs:string" />
+    <xs:element name="content2" type="xs:string" />
 
 </xs:schema>

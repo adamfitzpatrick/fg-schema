@@ -11,10 +11,15 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <xerces2.version>1.0</xerces2.version>
+        <xerces2.version>1.1-SNAPSHOT</xerces2.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.stepinto.xerces2</groupId>
+            <artifactId>cupv10k-runtime</artifactId>
+            <version>${xerces2.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.stepinto.xerces2</groupId>
             <artifactId>xercesImpl</artifactId>

@@ -10,12 +10,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class ResourceResolver implements LSResourceResolver {
 
     @Override
     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-        Path basePath = new File(baseURI).toPath();
+        Path basePath;
+        if (Objects.isNull(baseURI)) {
+            basePath = Paths.get(getClass().getResource("/schema").getPath());
+        } else {
+            basePath = new File(baseURI).toPath();
+        }
         Path namespacePath = Paths.get("./" + systemId);
         FileInputStream byteStream;
         try {

@@ -5,12 +5,14 @@ import io.stepinto.fgSchema.utils.ConfigurationModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.html.HTMLDOMImplementation;
 
 import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+
+
 
 @Tag("integration")
 public class FGSchemaIntegrationTest {
@@ -28,8 +30,15 @@ public class FGSchemaIntegrationTest {
     }
 
     @Test
-    public void testHappyPath() throws SAXException, IOException {
+    public void testHappyPath() throws Exception {
         sut = new FGSchema(helper);
+        // NodeList nodeList = huh();
         sut.validate(new StreamSource(instance));
+    }
+
+    public NodeList huh() throws Exception {
+
+        String expression = "/root";
+        return null;
     }
 }

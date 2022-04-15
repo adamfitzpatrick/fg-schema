@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns="http://stepinto.io/FG-DD5eCore"
+        elementFormDefault="qualified"
+        targetNamespace="http://stepinto.io/FG-DD5eCore"
+        xmlns:fg="http://stepinto.io/fantasygrounds"
+        xmlns:meta="http://stepinto.io/fg/meta"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+        vc:minVersion="1.1"
+        meta:title="FantasyGrounds DD5e SRD Core Rules Data"
+>
+    <xs:import schemaLocation="FantasyGrounds.xsd" namespace="http://stepinto.io/fantasygrounds"/>
+
+    <xs:complexType name="Background">
+        <xs:sequence>
+            <xs:element name="name" type="fg:TypedString" />
+            <xs:element name="text" type="fg:TypedString" />
+            <xs:element name="skill" type="fg:TypedString" />
+            <xs:element name="languages" type="fg:TypedString" />
+            <xs:element name="equipment" type="fg:TypedString" />
+            <xs:element name="features" >
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="supportingtables" type="fg:TypedString" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- contents of <reference> block -->
+    <xs:element name="backgrounddata">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:any maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="backgroundlists">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="byletter" type="fg:ListType" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- contents of <reference.backgrounds -->
+    <xs:element name="acolyte" type="Background" />
+
+    <!-- contents of <byletter.groups> block in <backgroundlists> -->
+
+
+
+    <!-- contents of <library> block -->
+    <xs:element name="libndd5esrddata" type="fg:Library" />
+
+    <!-- contents of <entries> block in <libndd5esrddata> -->
+    <xs:element name="id-00001" type="fg:LibraryEntry" />
+    <xs:element name="id-00002" type="fg:LibraryEntry" />
+    <xs:element name="id-00003" type="fg:LibraryEntry" />
+    <xs:element name="id-00004" type="fg:LibraryEntry" />
+    <xs:element name="id-00005" type="fg:LibraryEntry" />
+    <xs:element name="id-00006" type="fg:LibraryEntry" />
+    <xs:element name="id-00007" type="fg:LibraryEntry" />
+    <xs:element name="id-00008" type="fg:LibraryEntry" />
+    <xs:element name="id-00009" type="fg:LibraryEntry" />
+</xs:schema>
