@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://stepinto.io/fg-schema/meta-schema",
+  "$vocabulary": {
+    "https://json-schema.org/draft/2020-12/vocab/core": true
+  },
+  "title": "FantasyGrounds Schema meta-schema",
+  "type": ["object"],
+  "properties": {
+    "attributes": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "anyOf": [
+            {"type": "string"}
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$id": "https://stepinto.io/fg-schema/definition-file.schema.json",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "DefinitionFile schema",
+  "type": "object",
+  "properties": {
+    "xml": {
+      "type": "string"
+    },
+    "root": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "ruleset": {
+          "type": "string"
+        },
+        "displayname": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "named",
+        "author",
+        "ruleset",
+        "displayname"
+      ]
+    }
+  },
+  "required": ["xml", "root"]
+}
