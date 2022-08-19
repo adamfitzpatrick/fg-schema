@@ -5,18 +5,37 @@
     "https://json-schema.org/draft/2020-12/vocab/core": true
   },
   "title": "FantasyGrounds Schema meta-schema",
-  "type": ["object"],
+  "type": "object",
   "properties": {
-    "attributes": {
+    "xml": {
+      "$ref": "#/$defs/XmlTag"
+    }
+  },
+  "$defs": {
+    "XmlTag": {
       "type": "object",
-      "patternProperties": {
-        "^.*$": {
-          "anyOf": [
-            {"type": "string"}
-          ]
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
         }
-      },
-      "additionalProperties": false
+      }
+    },
+    "TagDefinition": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "attribute": {
+          "type": "object"
+        },
+        "content": {
+          "type": "object"
+        }
+      }
     }
   }
 }
