@@ -11,45 +11,45 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <xerces2.version>1.1-SNAPSHOT</xerces2.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>io.stepinto.xerces2</groupId>
-            <artifactId>cupv10k-runtime</artifactId>
-            <version>${xerces2.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
         </dependency>
         <dependency>
-            <groupId>io.stepinto.xerces2</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>${xerces2.version}</version>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
         <dependency>
-            <groupId>io.stepinto.xerces2</groupId>
-            <artifactId>resolver</artifactId>
-            <version>${xerces2.version}</version>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
         </dependency>
         <dependency>
-            <groupId>io.stepinto.xerces2</groupId>
-            <artifactId>serializer</artifactId>
-            <version>${xerces2.version}</version>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.1</version>
         </dependency>
         <dependency>
-            <groupId>io.stepinto.xerces2</groupId>
-            <artifactId>xpath2-processor</artifactId>
-            <version>${xerces2.version}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>5.8.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.8.2</version>
+            <version>5.9.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -63,26 +63,6 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>4.3.1</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.13.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.13.2</version>
         </dependency>
     </dependencies>
 
@@ -99,9 +79,6 @@
                         <version>1.0.1</version>
                     </dependency>
                 </dependencies>
-                <configuration>
-                    <groups>unit</groups>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -141,10 +118,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <forkCount>0</forkCount>
-                    <groups>integration</groups>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <!-- Identity template -->
+    <xsl:template match="@*|node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
+    <!--
+        The following template replaces statically named tags with dynamically named ones
+        only when the tag includes a "runtimeTagName" attribute.  Note that the original
+        tag is dropped when the identity template is applied only to the children of the
+        selected node.
+    -->
+    <xsl:template match="//*[@runtimeTagName]">
+        <xsl:element name="{./@runtimeTagName}">
+            <xsl:apply-templates select="child::node()"/>
+        </xsl:element>
+    </xsl:template>
+</xsl:transform>
